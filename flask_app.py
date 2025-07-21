@@ -112,8 +112,9 @@ def predict():
         return jsonify({'error': str(e), 'success': False}), 400
 
 # --- Application Entry Point ---
+# Load dependencies on application startup
+load_dependencies()
+
 if __name__ == '__main__':
-    if load_dependencies():
-        app.run(debug=True, port=5000)
-    else:
-        print("🔴 Could not start the application due to missing model files.")
+    # The app is already configured, just run it for local debugging
+    app.run(debug=True, port=5000)
