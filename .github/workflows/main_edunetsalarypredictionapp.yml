@@ -24,7 +24,20 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools wheel
           pip install -r requirements.txt
+
+      # Step 4: Deploy the application to your Azure Web App
+      # This single step handles zipping the code, sending it to Azure,
+      # and running the build process on the server.
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'EdunetSalaryPredictionApp'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_b95afa5fa501448fb78a4ac394d8aaab }}
+          package: .
+          startup-command: 'gunicorn --bind=0.0.0.0 --workers=4 app:app'
 
       # Step 4: Deploy the application to your Azure Web App
       # This single step handles zipping the code, sending it to Azure,
