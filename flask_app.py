@@ -21,10 +21,24 @@ def load_dependencies():
     global model, scaler, target_encoder, feature_encoders, training_columns
     
     models_dir = 'models'
+    
+    # Debug: Print current working directory and check if models directory exists
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Models directory exists: {os.path.exists(models_dir)}")
+    if os.path.exists(models_dir):
+        print(f"Files in models directory: {os.listdir(models_dir)}")
+    
     try:
-        model = joblib.load(os.path.join(models_dir, 'best_gradient_boosting_model.pkl'))
-        scaler = joblib.load(os.path.join(models_dir, 'scaler.pkl'))
-        target_encoder = joblib.load(os.path.join(models_dir, 'label_encoder.pkl'))
+        model_path = os.path.join(models_dir, 'best_gradient_boosting_model.pkl')
+        scaler_path = os.path.join(models_dir, 'scaler.pkl')
+        encoder_path = os.path.join(models_dir, 'label_encoder.pkl')
+        
+        print(f"Trying to load model from: {model_path}")
+        print(f"Model file exists: {os.path.exists(model_path)}")
+        
+        model = joblib.load(model_path)
+        scaler = joblib.load(scaler_path)
+        target_encoder = joblib.load(encoder_path)
 
         # Define the exact categories for each feature based on the notebook.
         # This ensures the encoding is stable and matches the training phase.
