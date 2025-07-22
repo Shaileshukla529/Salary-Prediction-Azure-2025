@@ -63,7 +63,26 @@ def load_dependencies():
 @app.route('/')
 def home():
     """Render the main prediction page."""
-    return render_template('index.html')
+    print("✅ Home route accessed successfully")
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        print(f"❌ Error serving home page: {e}")
+        return f"<h1>Salary Prediction App</h1><p>Home page error: {str(e)}</p><p>Models loaded: {model is not None}</p>"
+
+@app.route('/health')
+def health():
+    """Health check endpoint for Azure."""
+    return {
+        'status': 'healthy',
+        'model_loaded': model is not None,
+        'message': 'Salary Prediction API is running'
+    }
+
+@app.route('/test')
+def test():
+    """Simple test route without templates."""
+    return "<h1>🚀 Salary Prediction App is Running!</h1><p>✅ Flask application is working correctly</p><p>📦 Models loaded: {}</p>".format(model is not None)
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -120,13 +139,17 @@ def predict():
 
 # --- Application Entry Point ---
 # Load dependencies on application startup
-load_dependencies()
+print("🚀 Starting Flask application...")
+load_result = load_dependencies()
+print(f"📦 Dependencies loaded: {load_result}")
 
 if __name__ == '__main__':
     # For local development
     import os
     port = int(os.environ.get('PORT', 5000))
+    print(f"🌐 Starting Flask app on port {port}")
     app.run(debug=False, host='0.0.0.0', port=port)
 
 # For Azure App Service - ensure app is available as module
 application = app
+print("✅ Application module exported for Azure")
