@@ -7,3 +7,4 @@ matplotlib==3.7.1
 seaborn==0.12.2
 flask==2.3.2
 xgboost==1.7.6
+# Force a new build on Azure
