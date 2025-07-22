@@ -35,4 +35,5 @@ jobs:
           app-name: 'EdunetSalaryPredictionApp'
           slot-name: 'production'
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_b95afa5fa501448fb78a4ac394d8aaab }}
-          package: . # Deploy the entire repository
+          package: .
+          startup-command: 'gunicorn --bind=0.0.0.0 --workers=4 app:app'
