@@ -2,7 +2,7 @@
 
 ## Project Structure for Azure Deployment
 ```
-Edunet-Salary-Prediction/
+Salary-prediction-Edunet/
 ├── app.py                 # Main Flask application
 ├── Procfile              # Process file for startup command
 ├── requirements.txt      # Python dependencies
@@ -67,7 +67,7 @@ Azure will automatically set the PORT environment variable. The app is configure
 
 2. **Configure Deployment**
    - Deployment Center: GitHub
-   - Repository: Shaileshukla529/Edunet-Salary-Prediction
+   - Repository: Shaileshukla529/Salary-prediction-Edunet
    - Branch: main
    - Build provider: App Service build service
 
