@@ -19,9 +19,6 @@ training_columns = None
 def load_dependencies():
     """Load model, scaler, and pre-fitted encoders from disk using absolute paths."""
     global model, scaler, target_encoder, feature_encoders, training_columns
-    
-    # --- FIX: Use absolute path to locate the 'models' directory ---
-    # This ensures that the app can find the files even when deployed on a server.
     try:
         # Get the absolute path to the directory where this script is located
         base_dir = os.path.dirname(os.path.abspath(__file__))
