@@ -17,28 +17,20 @@ training_columns = None
 
 # --- Model and Dependency Loading ---
 def load_dependencies():
-    """Load model, scaler, and pre-fitted encoders from disk."""
+    """Load model, scaler, and pre-fitted encoders from disk using absolute paths."""
     global model, scaler, target_encoder, feature_encoders, training_columns
     
-    models_dir = 'models'
-    
-    # Debug: Print current working directory and check if models directory exists
-    print(f"Current working directory: {os.getcwd()}")
-    print(f"Models directory exists: {os.path.exists(models_dir)}")
-    if os.path.exists(models_dir):
-        print(f"Files in models directory: {os.listdir(models_dir)}")
-    
+    # --- FIX: Use absolute path to locate the 'models' directory ---
+    # This ensures that the app can find the files even when deployed on a server.
     try:
-        model_path = os.path.join(models_dir, 'best_gradient_boosting_model.pkl')
-        scaler_path = os.path.join(models_dir, 'scaler.pkl')
-        encoder_path = os.path.join(models_dir, 'label_encoder.pkl')
-        
-        print(f"Trying to load model from: {model_path}")
-        print(f"Model file exists: {os.path.exists(model_path)}")
-        
-        model = joblib.load(model_path)
-        scaler = joblib.load(scaler_path)
-        target_encoder = joblib.load(encoder_path)
+        # Get the absolute path to the directory where this script is located
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        models_dir = os.path.join(base_dir, 'models')
+
+        # Load the model and other dependencies
+        model = joblib.load(os.path.join(models_dir, 'best_gradient_boosting_model.pkl'))
+        scaler = joblib.load(os.path.join(models_dir, 'scaler.pkl'))
+        target_encoder = joblib.load(os.path.join(models_dir, 'label_encoder.pkl'))
 
         # Define the exact categories for each feature based on the notebook.
         # This ensures the encoding is stable and matches the training phase.
@@ -63,8 +55,12 @@ def load_dependencies():
         print("✅ Model and dependencies loaded successfully.")
         return True
     except FileNotFoundError as e:
-        print(f"❌ Error loading dependencies: {e}. Make sure model files are in the 'models' directory.")
+        print(f"❌ Error loading dependencies: {e}. Make sure model files are in the 'models' directory relative to the app.py file.")
         return False
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return False
+
 
 # --- Flask Routes ---
 @app.route('/')
@@ -76,7 +72,7 @@ def home():
 def predict():
     """Handle the prediction request."""
     if not model:
-        return jsonify({'error': 'Model is not loaded!', 'success': False}), 500
+        return jsonify({'error': 'Model is not loaded! Check server logs for details.', 'success': False}), 500
 
     try:
         data = request.get_json()
